@@ -247,4 +247,22 @@ class ContactService extends DomainrobotService
             ["json" => $body->toArray()]
         );
     }
+
+    public function resendVerificationEmail($id)
+    {
+        $domainrobotPromise = $this->resendVerificationAsync($id);
+        $domainrobotResult = $domainrobotPromise->wait();
+
+        Domainrobot::setLastDomainrobotResult($domainrobotResult);
+
+        return $domainrobotResult->getResult();
+    }
+
+    public function resendVerificationEmailAsync($id)
+    {
+        return $this->sendRequest(
+            $this->domainrobotConfig->getUrl() . "/contact/$id/verification/_resendEmail",
+            'PUT'
+        );
+    }
 }
