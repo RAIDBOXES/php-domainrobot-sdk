@@ -248,9 +248,15 @@ class ContactService extends DomainrobotService
         );
     }
 
+    /**
+     * Resends the contact verification email for a domain contact by domain contact id.
+     *
+     * @param int $id
+     * @return array
+     */
     public function resendVerificationEmail($id)
     {
-        $domainrobotPromise = $this->resendVerificationAsync($id);
+        $domainrobotPromise = $this->resendVerificationEmailAsync($id);
         $domainrobotResult = $domainrobotPromise->wait();
 
         Domainrobot::setLastDomainrobotResult($domainrobotResult);
@@ -258,11 +264,35 @@ class ContactService extends DomainrobotService
         return $domainrobotResult->getResult();
     }
 
+    /**
+     * Resends a contact verification email.
+     *
+     * @param int $id
+     * @return DomainrobotPromise
+     */
     public function resendVerificationEmailAsync($id)
     {
         return $this->sendRequest(
             $this->domainrobotConfig->getUrl() . "/contact/$id/verification/_resendEmail",
             'PUT'
+        );
+    }
+
+    public function createVerification($id)
+    {
+        $domainrobotPromise = $this->createVerificationAsync($id);
+        $domainrobotResult = $domainrobotPromise->wait();
+
+        Domainrobot::setLastDomainrobotResult($domainrobotResult);
+
+        return $domainrobotResult->getResult();
+    }
+
+    public function createVerificationAsync($id)
+    {
+        return $this->sendRequest(
+            $this->domainrobotConfig->getUrl() . "/contact/$id/verification",
+            'POST'
         );
     }
 }
