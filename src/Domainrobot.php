@@ -171,6 +171,32 @@ class Domainrobot
     public function __construct($domainrobotConfig = [])
     {
         $this->setDomainrobotConfig(new DomainrobotConfig($domainrobotConfig));
+        $this->initializeServices();
+    }
+
+    public function setDomainrobotConfig(DomainrobotConfig $domainrobotConfig)
+    {
+        $this->domainrobotConfig = $domainrobotConfig;
+        $this->initializeServices();
+    }
+    
+    public function getDomainrobotConfig()
+    {
+        return $this->domainrobotConfig;
+    }
+
+    public static function setLastDomainrobotResult($lastDomainrobotResult)
+    {
+        self::$lastDomainrobotResult = $lastDomainrobotResult;
+    }
+
+    public static function getLastDomainrobotResult()
+    {
+        return self::$lastDomainrobotResult;
+    }
+
+    private function initializeServices()
+    {
         $this->certificate = new CertificateService($this->domainrobotConfig);
         $this->domainStudio = new DomainStudioService($this->domainrobotConfig);
         $this->domain = new DomainService($this->domainrobotConfig);
@@ -189,25 +215,5 @@ class Domainrobot
         $this->restore = new RestoreService($this->domainrobotConfig);
         $this->pcDomains = new PcDomainsService($this->domainrobotConfig);
         $this->whois = new WhoisService($this->domainrobotConfig);
-    }
-
-    public function setDomainrobotConfig(DomainrobotConfig $domainrobotConfig)
-    {
-        $this->domainrobotConfig = $domainrobotConfig;
-    }
-    
-    public function getDomainrobotConfig()
-    {
-        return $this->domainrobotConfig;
-    }
-
-    public static function setLastDomainrobotResult($lastDomainrobotResult)
-    {
-        self::$lastDomainrobotResult = $lastDomainrobotResult;
-    }
-
-    public static function getLastDomainrobotResult()
-    {
-        return self::$lastDomainrobotResult;
     }
 }
