@@ -1,4 +1,4 @@
-# PHP Domainrobot API
+# PHP Domainrobot API - Fork
 
 A php package for easy integration of the **Domainrobot API** powered by [InterNetX GmbH](https://internetx.com).
 
