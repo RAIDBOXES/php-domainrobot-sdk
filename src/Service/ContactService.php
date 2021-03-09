@@ -6,10 +6,10 @@ use Domainrobot\Domainrobot;
 use Domainrobot\Lib\ArrayHelper;
 use Domainrobot\Lib\DomainrobotConfig;
 use Domainrobot\Lib\DomainrobotPromise;
+use Domainrobot\Model\ContactVerification;
 use Domainrobot\Model\Query;
 use Domainrobot\Model\Contact;
 use Domainrobot\Model\JsonNoData;
-use Domainrobot\Service\DomainrobotService;
 
 class ContactService extends DomainrobotService
 {
@@ -293,6 +293,24 @@ class ContactService extends DomainrobotService
         return $this->sendRequest(
             $this->domainrobotConfig->getUrl() . "/contact/$id/verification",
             'POST'
+        );
+    }
+
+    public function verificationInfo($id)
+    {
+        $domainrobotPromise = $this->verificationInfoAsync($id);
+        $domainrobotResult = $domainrobotPromise->wait();
+
+        Domainrobot::setLastDomainrobotResult($domainrobotResult);
+
+        return new ContactVerification(ArrayHelper::getValueFromArray($domainrobotResult->getResult(), 'data.0', []));
+    }
+
+    public function verificationInfoAsync($id)
+    {
+        return $this->sendRequest(
+            $this->domainrobotConfig->getUrl() . "/contact/$id/verification",
+            'GET'
         );
     }
 }
